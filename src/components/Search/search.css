@@ -1,0 +1,22 @@
+form {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  justify-content: center;
+}
+input {
+  outline: none;
+  border: none;
+  padding: 0.5rem 1rem;
+  width: 13rem;
+}
+button {
+  padding: 0.5rem 2.25rem;
+  background-color: rgb(218, 143, 6);
+  border-radius: 2px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 0.75rem;
+}
