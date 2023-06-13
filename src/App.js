@@ -12,6 +12,7 @@ function App() {
   //  Save results that we recieve from api
   const [recipes, setRecipes] = useState([]);
 
+  // search function
   const getDataFromSearchComponent = (getData) => {
     setLoading(true);
     async function FetchData() {
@@ -27,11 +28,18 @@ function App() {
         setLoading(false);
         setRecipes(meals);
       }
+      // console.log(!meals);
+      // meals === null ? setLoading(false)
+      if (!meals) {
+        setLoading(false);
+        setRecipes([]);
+      }
       // console.log(data.meals);
     }
     FetchData();
     // console.log(getData)
   };
+
   console.log(loading, recipes);
   return (
     <div className="App">
@@ -40,11 +48,15 @@ function App() {
         dummy-data={dummyData}
       />
       <p>{loading ? "loading...." : null}</p>
-
+      <p>{recipes.meals === null ? "There is no" : null}</p>
       <div className="container">
-        {recipes && recipes.length > 0
-          ? recipes.map((item) => <Recipe item={item} />)
-          : null}
+        {recipes && recipes.length > 0 ? (
+          recipes.map((item) => <Recipe item={item} />)
+        ) : (
+          <p className="no-meal">
+            {loading ? null : "There is no meal by this name try another one"}
+          </p>
+        )}
       </div>
     </div>
   );

@@ -9,17 +9,31 @@
   /* display: grid;
   grid-template-columns: minmax(auto-fill, 250px, 1fr); */
   display: flex;
-  gap: 1rem;
+  gap: 1.5rem;
   flex-wrap: wrap;
   justify-content: center;
+  /* color: #ffffff; */
   /* align-items: center; */
 }
 .container img {
   width: auto;
-  height: 20rem;
+  height: 17rem;
   object-fit: contain;
+  border-radius: 12px;
 }
 .container p {
-  color: #ececec;
-  width: 10rem;
+  /* color: #ececec; */
+  /* width: 10rem; */
+}
+.no-meal {
+  color: #ffffff;
+  width: 100% !important;
+}
+@media (max-width: 350px) {
+  .container img {
+    width: auto;
+    height: 12rem;
+    object-fit: contain;
+    border-radius: 12px;
+  }
 }
