@@ -25,9 +25,20 @@
   /* color: #ececec; */
   /* width: 10rem; */
 }
-.no-meal {
+.no-meal,
+.loading {
   color: #ffffff;
   width: 100% !important;
+}
+
+.separation {
+  margin: 5rem 0;
+  border: 2px solid #f0f0f0;
+}
+
+.favourites {
+  color: #fa6400;
+  margin: 3rem auto;
 }
 @media (max-width: 350px) {
   .container img {

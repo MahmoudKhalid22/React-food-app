@@ -1,9 +1,8 @@
 import React from "react";
-import "./recipe.css";
 import { CiLocationOn } from "react-icons/ci";
 
-function Recipe(props) {
-  const { id, meal, img, area, addFavourite } = props;
+function Favourites(props) {
+  const { id, meal, img, area, removerFavourite } = props;
 
   return (
     <div>
@@ -17,12 +16,12 @@ function Recipe(props) {
           <CiLocationOn className="location-icon" />
           <p className="area">{area}</p>
         </div>
-        <button type="submit" onClick={addFavourite} className="cart">
-          Add To favourites
+        <button type="submit" onClick={removerFavourite} className="cart">
+          Remove from favourites
         </button>
       </div>
     </div>
   );
 }
 
-export default Recipe;
+export default Favourites;

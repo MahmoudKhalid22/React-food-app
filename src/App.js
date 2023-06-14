@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
+import Favourites from "./components/Favourties/Favourites";
 import Recipe from "./components/Recipe/Recipe";
 import Search from "./components/Search/Search";
 
@@ -8,7 +9,8 @@ const dummyData = "dummyData";
 function App() {
   //  Loading State
   const [loading, setLoading] = useState(false);
-
+  // Favourite state
+  const [favourites, setFavourites] = useState([]);
   //  Save results that we recieve from api
   const [recipes, setRecipes] = useState([]);
 
@@ -40,18 +42,81 @@ function App() {
     // console.log(getData)
   };
 
-  console.log(loading, recipes);
+  // add favourite function
+  const addFavourite = (getCurrentRecipieItem) => {
+    // console.log(getCurrentRecipieItem);
+    let cpyFavourites = [...favourites];
+
+    const index = cpyFavourites.findIndex(
+      (category) => category.idMeal === getCurrentRecipieItem.idMeal
+    );
+
+    if (index === -1) {
+      cpyFavourites.push(getCurrentRecipieItem);
+      setFavourites(cpyFavourites);
+      // SET THE FAVOURITES IN LOCAL STORAGE
+      localStorage.setItem("favourites", JSON.stringify(cpyFavourites));
+    } else {
+      alert("Already added to favourite");
+    }
+  };
+
+  // Remove favourites
+  const removeFavourite = (category) => {
+    // console.log(category);
+    let cpyFavourites = [...favourites];
+    cpyFavourites = cpyFavourites.filter((e) => e.idMeal !== category);
+    console.log(cpyFavourites);
+    setFavourites(cpyFavourites);
+    // SET THE FAVOURITES IN LOCAL STORAGE
+    localStorage.setItem("favourites", JSON.stringify(cpyFavourites));
+  };
+
+  // Get Items from localstorage
+  useEffect(() => {
+    const getFavouritesFromStorage = JSON.parse(
+      localStorage.getItem("favourites")
+    );
+
+    setFavourites(getFavouritesFromStorage);
+  }, []);
+  console.log(favourites);
   return (
     <div className="App">
       <Search
         getDataFromSearchComponent={getDataFromSearchComponent}
         dummy-data={dummyData}
       />
-      <p>{loading ? "loading...." : null}</p>
-      <p>{recipes.meals === null ? "There is no" : null}</p>
+      <p className="loading">{loading ? "loading...." : null}</p>
+      <h2 className="favourites">Favourites</h2>
+      <div className="container">
+        {favourites && favourites.length > 0
+          ? favourites.map((cat) => (
+              <Favourites
+                removerFavourite={() => removeFavourite(cat.idMeal)}
+                id={cat.idMeal}
+                meal={cat.strMeal}
+                img={cat.strMealThumb}
+                area={cat.strArea}
+              />
+            ))
+          : null}
+      </div>
+      <div className="separation">
+        <hr />
+      </div>
+
       <div className="container">
         {recipes && recipes.length > 0 ? (
-          recipes.map((item) => <Recipe item={item} />)
+          recipes.map((item) => (
+            <Recipe
+              addFavourite={() => addFavourite(item)}
+              id={item.idMeal}
+              meal={item.strMeal}
+              img={item.strMealThumb}
+              area={item.strArea}
+            />
+          ))
         ) : (
           <p className="no-meal">
             {loading ? null : "There is no meal by this name try another one"}
