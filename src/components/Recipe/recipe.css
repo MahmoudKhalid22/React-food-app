@@ -9,6 +9,9 @@
   border-radius: 12px;
   /* width: 100%; */
   /* margin-bottom: 2rem; */
+  min-height: 31rem;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
 }
 
 .item .location {

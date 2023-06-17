@@ -1,10 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import "./App.css";
 import Favourites from "./components/Favourties/Favourites";
 import Recipe from "./components/Recipe/Recipe";
 import Search from "./components/Search/Search";
 
 const dummyData = "dummyData";
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "filterFavourites":
+      console.log(action);
+      return {
+        ...state,
+        filteredValue: action.value,
+      };
+    default:
+      return state;
+  }
+};
+
+const initialState = {
+  filteredValue: "",
+};
 
 function App() {
   //  Loading State
@@ -13,6 +30,9 @@ function App() {
   const [favourites, setFavourites] = useState([]);
   //  Save results that we recieve from api
   const [recipes, setRecipes] = useState([]);
+
+  // use reducer
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   // search function
   const getDataFromSearchComponent = (getData) => {
@@ -66,7 +86,7 @@ function App() {
     // console.log(category);
     let cpyFavourites = [...favourites];
     cpyFavourites = cpyFavourites.filter((e) => e.idMeal !== category);
-    console.log(cpyFavourites);
+
     setFavourites(cpyFavourites);
     // SET THE FAVOURITES IN LOCAL STORAGE
     localStorage.setItem("favourites", JSON.stringify(cpyFavourites));
@@ -80,7 +100,15 @@ function App() {
 
     setFavourites(getFavouritesFromStorage);
   }, []);
-  console.log(favourites);
+
+  // Filter Favourites
+  const filterFavouritesItems = favourites.filter((item) => {
+    return item.strMeal.toLowerCase().includes(state.filteredValue);
+    // console.log(item);
+  });
+  // console.log(filterFavouritesItems);
+
+  // console.log(dispatch);
   return (
     <div className="App">
       <Search
@@ -89,9 +117,20 @@ function App() {
       />
       <p className="loading">{loading ? "loading...." : null}</p>
       <h2 className="favourites">Favourites</h2>
-      <div className="container">
-        {favourites && favourites.length > 0
-          ? favourites.map((cat) => (
+      <div className="search-favourites">
+        <input
+          name="searchfavourites"
+          placeholder="Search Favourites"
+          type="text"
+          onChange={(event) =>
+            dispatch({ type: "filterFavourites", value: event.target.value })
+          }
+          value={state.filteredValue}
+        />
+      </div>
+      <div className="containerFav">
+        {filterFavouritesItems && filterFavouritesItems.length > 0
+          ? filterFavouritesItems.map((cat) => (
               <Favourites
                 removerFavourite={() => removeFavourite(cat.idMeal)}
                 id={cat.idMeal}
@@ -101,7 +140,9 @@ function App() {
               />
             ))
           : null}
+        {/* <input className="range" type="range"/> */}
       </div>
+
       <div className="separation">
         <hr />
       </div>
