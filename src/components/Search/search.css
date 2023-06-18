@@ -11,7 +11,7 @@ input {
   width: 13rem;
 }
 button {
-  padding: 0.5rem 2.25rem;
+  padding: 1rem 3rem;
   background-color: rgb(218, 143, 6);
   border-radius: 2px;
   cursor: pointer;

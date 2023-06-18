@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { CiLocationOn } from "react-icons/ci";
+import { themeContext } from "../../App";
 
 function Favourites(props) {
   const { id, meal, img, area, removerFavourite } = props;
-
+  const { theme } = useContext(themeContext);
   return (
     <div>
       <div key={id} className="item">
@@ -16,7 +17,12 @@ function Favourites(props) {
           <CiLocationOn className="location-icon" />
           <p className="area">{area}</p>
         </div>
-        <button type="submit" onClick={removerFavourite} className="cart">
+        <button
+          style={theme ? { backgroundColor: "#12343b" } : {}}
+          type="submit"
+          onClick={removerFavourite}
+          className="cart"
+        >
           Remove from favourites
         </button>
       </div>

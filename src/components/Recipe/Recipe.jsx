@@ -1,10 +1,12 @@
 import React from "react";
 import "./recipe.css";
 import { CiLocationOn } from "react-icons/ci";
+import { useContext } from "react";
+import { themeContext } from "../../App";
 
 function Recipe(props) {
   const { id, meal, img, area, addFavourite } = props;
-
+  const { theme } = useContext(themeContext);
   return (
     <div>
       <div key={id} className="item">
@@ -17,7 +19,12 @@ function Recipe(props) {
           <CiLocationOn className="location-icon" />
           <p className="area">{area}</p>
         </div>
-        <button type="submit" onClick={addFavourite} className="cart">
+        <button
+          style={theme ? { backgroundColor: "#12343b" } : {}}
+          type="submit"
+          onClick={addFavourite}
+          className="cart"
+        >
           Add To favourites
         </button>
       </div>

@@ -1,8 +1,9 @@
-import { useState, useEffect, useReducer } from "react";
+import { useState, useEffect, useReducer, createContext } from "react";
 import "./App.css";
 import Favourites from "./components/Favourties/Favourites";
 import Recipe from "./components/Recipe/Recipe";
 import Search from "./components/Search/Search";
+import Theme from "./components/Theme/Theme";
 
 const dummyData = "dummyData";
 
@@ -22,6 +23,9 @@ const reducer = (state, action) => {
 const initialState = {
   filteredValue: "",
 };
+
+// USE CONTEXT AND CHANGE THEME ==> create provide consume
+export const themeContext = createContext(null);
 
 function App() {
   //  Loading State
@@ -109,62 +113,73 @@ function App() {
   // console.log(filterFavouritesItems);
 
   // console.log(dispatch);
+
+  // PROVIDE THE CONTEXT
+  const [theme, setTheme] = useState(false);
   return (
-    <div className="App">
-      <Search
-        getDataFromSearchComponent={getDataFromSearchComponent}
-        dummy-data={dummyData}
-      />
-      <p className="loading">{loading ? "loading...." : null}</p>
-      <h2 className="favourites">Favourites</h2>
-      <div className="search-favourites">
-        <input
-          name="searchfavourites"
-          placeholder="Search Favourites"
-          type="text"
-          onChange={(event) =>
-            dispatch({ type: "filterFavourites", value: event.target.value })
-          }
-          value={state.filteredValue}
+    <themeContext.Provider
+      value={{
+        theme,
+        setTheme,
+      }}
+    >
+      <div className="App" style={theme ? { backgroundColor: "#feb300" } : {}}>
+        <Theme />
+        <Search
+          getDataFromSearchComponent={getDataFromSearchComponent}
+          dummy-data={dummyData}
         />
-      </div>
-      <div className="containerFav">
-        {filterFavouritesItems && filterFavouritesItems.length > 0
-          ? filterFavouritesItems.map((cat) => (
-              <Favourites
-                removerFavourite={() => removeFavourite(cat.idMeal)}
-                id={cat.idMeal}
-                meal={cat.strMeal}
-                img={cat.strMealThumb}
-                area={cat.strArea}
+        <p className="loading">{loading ? "loading...." : null}</p>
+        <h2 className="favourites">Favourites</h2>
+        <div className="search-favourites">
+          <input
+            name="searchfavourites"
+            placeholder="Search Favourites"
+            type="text"
+            onChange={(event) =>
+              dispatch({ type: "filterFavourites", value: event.target.value })
+            }
+            value={state.filteredValue}
+          />
+        </div>
+        <div className="containerFav">
+          {filterFavouritesItems && filterFavouritesItems.length > 0
+            ? filterFavouritesItems.map((cat) => (
+                <Favourites
+                  removerFavourite={() => removeFavourite(cat.idMeal)}
+                  id={cat.idMeal}
+                  meal={cat.strMeal}
+                  img={cat.strMealThumb}
+                  area={cat.strArea}
+                />
+              ))
+            : null}
+          {/* <input className="range" type="range"/> */}
+        </div>
+
+        <div className="separation">
+          <hr />
+        </div>
+
+        <div className="container">
+          {recipes && recipes.length > 0 ? (
+            recipes.map((item) => (
+              <Recipe
+                addFavourite={() => addFavourite(item)}
+                id={item.idMeal}
+                meal={item.strMeal}
+                img={item.strMealThumb}
+                area={item.strArea}
               />
             ))
-          : null}
-        {/* <input className="range" type="range"/> */}
+          ) : (
+            <p className="no-meal">
+              {loading ? null : "There is no meal by this name try another one"}
+            </p>
+          )}
+        </div>
       </div>
-
-      <div className="separation">
-        <hr />
-      </div>
-
-      <div className="container">
-        {recipes && recipes.length > 0 ? (
-          recipes.map((item) => (
-            <Recipe
-              addFavourite={() => addFavourite(item)}
-              id={item.idMeal}
-              meal={item.strMeal}
-              img={item.strMealThumb}
-              area={item.strArea}
-            />
-          ))
-        ) : (
-          <p className="no-meal">
-            {loading ? null : "There is no meal by this name try another one"}
-          </p>
-        )}
-      </div>
-    </div>
+    </themeContext.Provider>
   );
 }
 

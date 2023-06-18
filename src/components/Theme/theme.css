@@ -1,0 +1,13 @@
+.themeButton {
+  padding: 0.75rem 3rem;
+  background-color: #fa6400;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgb(0, 0, 0 / 2%);
+  border-color: #fa6400;
+}

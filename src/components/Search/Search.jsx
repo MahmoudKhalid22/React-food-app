@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { themeContext } from "../../App";
 import "./search.css";
 
 function Search(props) {
@@ -17,6 +18,8 @@ function Search(props) {
     getDataFromSearchComponent(inputValue);
   };
 
+  const { theme } = useContext(themeContext);
+
   return (
     <form onSubmit={handleSubmit}>
       <input
@@ -26,7 +29,9 @@ function Search(props) {
         value={inputValue}
         id="search"
       />
-      <button type="submit">Search</button>
+      <button style={theme ? { backgroundColor: "#12343b" } : {}} type="submit">
+        Search
+      </button>
     </form>
   );
 }
