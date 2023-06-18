@@ -9,9 +9,10 @@ input {
   border: none;
   padding: 0.5rem 1rem;
   width: 13rem;
+  padding: 1rem 3rem;
 }
 button {
-  padding: 1rem 3rem;
+  padding: 1rem;
   background-color: rgb(218, 143, 6);
   border-radius: 2px;
   cursor: pointer;

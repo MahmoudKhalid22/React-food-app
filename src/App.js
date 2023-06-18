@@ -1,4 +1,11 @@
-import { useState, useEffect, useReducer, createContext } from "react";
+import {
+  useState,
+  useEffect,
+  useReducer,
+  createContext,
+  useCallback,
+  useMemo,
+} from "react";
 import "./App.css";
 import Favourites from "./components/Favourties/Favourites";
 import Recipe from "./components/Recipe/Recipe";
@@ -67,23 +74,26 @@ function App() {
   };
 
   // add favourite function
-  const addFavourite = (getCurrentRecipieItem) => {
-    // console.log(getCurrentRecipieItem);
-    let cpyFavourites = [...favourites];
+  const addFavourite = useCallback(
+    (getCurrentRecipieItem) => {
+      let cpyFavourites = [...favourites];
 
-    const index = cpyFavourites.findIndex(
-      (category) => category.idMeal === getCurrentRecipieItem.idMeal
-    );
+      const index = cpyFavourites.findIndex(
+        (category) => category.idMeal === getCurrentRecipieItem.idMeal
+      );
 
-    if (index === -1) {
-      cpyFavourites.push(getCurrentRecipieItem);
-      setFavourites(cpyFavourites);
-      // SET THE FAVOURITES IN LOCAL STORAGE
-      localStorage.setItem("favourites", JSON.stringify(cpyFavourites));
-    } else {
-      alert("Already added to favourite");
-    }
-  };
+      if (index === -1) {
+        cpyFavourites.push(getCurrentRecipieItem);
+        setFavourites(cpyFavourites);
+        // SET THE FAVOURITES IN LOCAL STORAGE
+        localStorage.setItem("favourites", JSON.stringify(cpyFavourites));
+        window.scrollTo({ top: "0", behavior: "smooth" });
+      } else {
+        alert("Already added to favourite");
+      }
+    },
+    [favourites]
+  );
 
   // Remove favourites
   const removeFavourite = (category) => {
@@ -110,12 +120,30 @@ function App() {
     return item.strMeal.toLowerCase().includes(state.filteredValue);
     // console.log(item);
   });
-  // console.log(filterFavouritesItems);
-
-  // console.log(dispatch);
 
   // PROVIDE THE CONTEXT
   const [theme, setTheme] = useState(false);
+
+  // USE CALLBACK TO RERENDER ONLY WHEN RECIPIES CHANGE
+  const renderRecipies = useCallback(() => {
+    if (recipes && recipes.length > 0) {
+      return recipes.map((item) => (
+        <Recipe
+          addFavourite={() => addFavourite(item)}
+          id={item.idMeal}
+          meal={item.strMeal}
+          img={item.strMealThumb}
+          area={item.strArea}
+        />
+      ));
+    } else {
+      return (
+        <p className="no-meal">
+          {loading ? null : "There is no meal by this name try another one"}
+        </p>
+      );
+    }
+  }, [recipes, addFavourite, loading]);
   return (
     <themeContext.Provider
       value={{
@@ -154,27 +182,28 @@ function App() {
                 />
               ))
             : null}
-          {/* <input className="range" type="range"/> */}
+          {!loading && !filterFavouritesItems.length && (
+            <p className="no-meal">
+              There is no favourite recipes by this name
+            </p>
+          )}
         </div>
 
         <div className="separation">
           <hr />
         </div>
-
         <div className="container">
-          {recipes && recipes.length > 0 ? (
-            recipes.map((item) => (
-              <Recipe
-                addFavourite={() => addFavourite(item)}
-                id={item.idMeal}
-                meal={item.strMeal}
-                img={item.strMealThumb}
-                area={item.strArea}
-              />
-            ))
-          ) : (
+          {useMemo(
+            () =>
+              !loading && recipes && recipes.length > 0
+                ? renderRecipies()
+                : null,
+            [loading, recipes, renderRecipies]
+          )}
+
+          {!loading && !recipes.length && (
             <p className="no-meal">
-              {loading ? null : "There is no meal by this name try another one"}
+              There is no recipes by this name try another one
             </p>
           )}
         </div>
