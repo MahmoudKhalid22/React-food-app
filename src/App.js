@@ -108,18 +108,20 @@ function App() {
 
   // Get Items from localstorage
   useEffect(() => {
-    const getFavouritesFromStorage = JSON.parse(
-      localStorage.getItem("favourites")
-    );
+    const getFavouritesFromStorage =
+      JSON.parse(localStorage.getItem("favourites")) || [];
 
     setFavourites(getFavouritesFromStorage);
   }, []);
 
   // Filter Favourites
-  const filterFavouritesItems = favourites.filter((item) => {
-    return item.strMeal.toLowerCase().includes(state.filteredValue);
-    // console.log(item);
-  });
+  const filterFavouritesItems =
+    favourites && favourites.length > 0
+      ? favourites.filter((item) => {
+          return item.strMeal.toLowerCase().includes(state.filteredValue);
+          // console.log(item);
+        })
+      : [];
 
   // PROVIDE THE CONTEXT
   const [theme, setTheme] = useState(false);
